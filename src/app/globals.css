@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neutrals — warm ivory, sand and deep charcoal for readable text */
+  --color-ivory: #fbf8f2;
+  --color-linen: #f4eee3;
+  --color-sand: #eadcc4;
+  --color-sand-deep: #cdb993;
+  --color-ink: #1c2a31;
+  --color-stone: #56605f;
+  --color-mist: #dde7e9;
+
+  /* Primary brand — Delta waterfront blues drawn from the Orwood identity */
+  --color-delta-950: #0b2230;
+  --color-delta-900: #103447;
+  --color-delta-800: #174b5c;
+  --color-delta-700: #1f5e73;
+  --color-delta-500: #3f8aa0;
+  --color-delta-300: #9cc8d3;
+  --color-delta-100: #e2eff2;
+
+  /* Category accents */
+  --color-ember-800: #7f3f1b;
+  --color-ember-700: #94491f;
+  --color-ember-500: #c47a45;
+  --color-ember-100: #f8e9da;
+  --color-oak-800: #3e4b25;
+  --color-oak-700: #4b5a2e;
+  --color-oak-100: #edf0df;
+  --color-brass-700: #7d5a1f;
+  --color-plum-700: #6b3347;
+  --color-plum-100: #f4e8ec;
+  --color-steel-800: #2a363e;
+  --color-steel-700: #3a4a54;
+  --color-steel-100: #e9edef;
+  --color-kraft-100: #f3ebdc;
+  --color-kraft-700: #6f5630;
+
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-orwood: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --accent: #1f5e73;
+  --accent-strong: #174b5c;
+  --tint: #f4eee3;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+::selection {
+  background: var(--color-delta-300);
+  color: var(--color-delta-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-delta-500);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap {
+  width: min(100% - 2.5rem, 1280px);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .wrap {
+    width: min(100% - 4.5rem, 1280px);
+  }
+}
+
+/* Underline that draws in on hover — used for text links */
+.link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-orwood);
+}
+
+.group:hover .link-line,
+a:hover > .link-line {
+  background-size: 100% 1px;
+}
+
+/* Scroll-linked light sweep across a photograph, like sun glancing off water.
+   Progressive enhancement: browsers without view timelines simply show no sheen. */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: -5% -60%;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 250, 240, 0.3) 50%,
+    transparent 58%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: view()) {
+  .sheen::after {
+    animation: sheen-move linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 55%;
+  }
+}
+
+@keyframes sheen-move {
+  0% {
+    transform: translateX(-55%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(45%);
+    opacity: 0;
+  }
+}
+
+/* Scroll cue for the hero */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.scroll-line {
+  animation: scroll-line 2.4s var(--ease-orwood) infinite;
+}
+
+/* Soft drifting light on the hero, like reflections on moving water */
+@keyframes drift-light {
+  0% {
+    transform: translate3d(-2%, 0, 0);
+  }
+  100% {
+    transform: translate3d(2%, -1%, 0);
+  }
+}
+
+.water-light {
+  animation: drift-light 14s ease-in-out infinite alternate;
+  background: radial-gradient(
+    ellipse at 70% 80%,
+    rgba(255, 236, 200, 0.18),
+    transparent 60%
+  );
+}
+
+/* Sheen overlay element (kept separate so it never fights a component's own positioning) */
+.sheen-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sheen-layer::after {
+  content: "";
+  position: absolute;
+  inset: -5% -60%;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 250, 240, 0.3) 50%,
+    transparent 58%
+  );
+  opacity: 0;
+}
+
+@supports (animation-timeline: view()) {
+  .sheen-layer::after {
+    animation: sheen-move linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 55%;
+  }
+}
+
+/* A rule that draws itself as it scrolls into view */
+.draw-line {
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: view()) {
+  .draw-line {
+    animation: draw-x linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+}
+
+@keyframes draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheen-layer::after {
+    display: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .sheen::after,
+  .water-light {
+    animation: none !important;
+    display: none;
+  }
+}
